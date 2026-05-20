@@ -23,36 +23,36 @@ Conventions and best practices for designing consistent, developer-friendly REST
 
 ```
 # Resources are nouns, plural, lowercase, kebab-case
-GET    /api/v1/users
-GET    /api/v1/users/:id
-POST   /api/v1/users
-PUT    /api/v1/users/:id
-PATCH  /api/v1/users/:id
-DELETE /api/v1/users/:id
+GET    /api/users
+GET    /api/users/:id
+POST   /api/users
+PUT    /api/users/:id
+PATCH  /api/users/:id
+DELETE /api/users/:id
 
 # Sub-resources for relationships
-GET    /api/v1/users/:id/orders
-POST   /api/v1/users/:id/orders
+GET    /api/users/:id/orders
+POST   /api/users/:id/orders
 
 # Actions that don't map to CRUD (use verbs sparingly)
-POST   /api/v1/orders/:id/cancel
-POST   /api/v1/auth/login
-POST   /api/v1/auth/refresh
+POST   /api/orders/:id/cancel
+POST   /api/auth/login
+POST   /api/auth/refresh
 ```
 
 ### Naming Rules
 
 ```
 # GOOD
-/api/v1/team-members          # kebab-case for multi-word resources
-/api/v1/orders?status=active  # query params for filtering
-/api/v1/users/123/orders      # nested resources for ownership
+/api/team-members          # kebab-case for multi-word resources
+/api/orders?status=active  # query params for filtering
+/api/users/123/orders      # nested resources for ownership
 
 # BAD
-/api/v1/getUsers              # verb in URL
-/api/v1/user                  # singular (use plural)
-/api/v1/team_members          # snake_case in URLs
-/api/v1/users/123/getOrders   # verb in nested resource
+/api/getUsers              # verb in URL
+/api/user                  # singular (use plural)
+/api/team_members          # snake_case in URLs
+/api/users/123/getOrders   # verb in nested resource
 ```
 
 ## HTTP Methods and Status Codes
@@ -108,7 +108,7 @@ HTTP/1.1 404 Not Found
 # BAD: 200 for created resources
 # GOOD: 201 with Location header
 HTTP/1.1 201 Created
-Location: /api/v1/users/abc-123
+Location: /api/users/abc-123
 ```
 
 ## Response Format
@@ -141,9 +141,9 @@ Location: /api/v1/users/abc-123
     "total_pages": 8
   },
   "links": {
-    "self": "/api/v1/users?page=1&per_page=20",
-    "next": "/api/v1/users?page=2&per_page=20",
-    "last": "/api/v1/users?page=8&per_page=20"
+    "self": "/api/users?page=1&per_page=20",
+    "next": "/api/users?page=2&per_page=20",
+    "last": "/api/users?page=8&per_page=20"
   }
 }
 ```
@@ -200,7 +200,7 @@ interface ApiError {
 ### Offset-Based (Simple)
 
 ```
-GET /api/v1/users?page=2&per_page=20
+GET /api/users?page=2&per_page=20
 
 # Implementation
 SELECT * FROM users
@@ -214,7 +214,7 @@ LIMIT 20 OFFSET 20;
 ### Cursor-Based (Scalable)
 
 ```
-GET /api/v1/users?cursor=eyJpZCI6MTIzfQ&limit=20
+GET /api/users?cursor=eyJpZCI6MTIzfQ&limit=20
 
 # Implementation
 SELECT * FROM users
@@ -251,45 +251,45 @@ LIMIT 21;  -- fetch one extra to determine has_next
 
 ```
 # Simple equality
-GET /api/v1/orders?status=active&customer_id=abc-123
+GET /api/orders?status=active&customer_id=abc-123
 
 # Comparison operators (use bracket notation)
-GET /api/v1/products?price[gte]=10&price[lte]=100
-GET /api/v1/orders?created_at[after]=2025-01-01
+GET /api/products?price[gte]=10&price[lte]=100
+GET /api/orders?created_at[after]=2025-01-01
 
 # Multiple values (comma-separated)
-GET /api/v1/products?category=electronics,clothing
+GET /api/products?category=electronics,clothing
 
 # Nested fields (dot notation)
-GET /api/v1/orders?customer.country=US
+GET /api/orders?customer.country=US
 ```
 
 ### Sorting
 
 ```
 # Single field (prefix - for descending)
-GET /api/v1/products?sort=-created_at
+GET /api/products?sort=-created_at
 
 # Multiple fields (comma-separated)
-GET /api/v1/products?sort=-featured,price,-created_at
+GET /api/products?sort=-featured,price,-created_at
 ```
 
 ### Full-Text Search
 
 ```
 # Search query parameter
-GET /api/v1/products?q=wireless+headphones
+GET /api/products?q=wireless+headphones
 
 # Field-specific search
-GET /api/v1/users?email=alice
+GET /api/users?email=alice
 ```
 
 ### Sparse Fieldsets
 
 ```
 # Return only specified fields (reduces payload)
-GET /api/v1/users?fields=id,name,email
-GET /api/v1/orders?fields=id,total,status&include=customer.name
+GET /api/users?fields=id,name,email
+GET /api/orders?fields=id,total,status&include=customer.name
 ```
 
 ## Authentication and Authorization
@@ -298,11 +298,11 @@ GET /api/v1/orders?fields=id,total,status&include=customer.name
 
 ```
 # Bearer token in Authorization header
-GET /api/v1/users
+GET /api/users
 Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
 
 # API key (for server-to-server)
-GET /api/v1/data
+GET /api/data
 X-API-Key: sk_live_abc123
 ```
 
@@ -310,7 +310,7 @@ X-API-Key: sk_live_abc123
 
 ```typescript
 // Resource-level: check ownership
-app.get("/api/v1/orders/:id", async (req, res) => {
+app.get("/api/orders/:id", async (req, res) => {
   const order = await Order.findById(req.params.id);
   if (!order) return res.status(404).json({ error: { code: "not_found" } });
   if (order.userId !== req.user.id) return res.status(403).json({ error: { code: "forbidden" } });
@@ -318,7 +318,7 @@ app.get("/api/v1/orders/:id", async (req, res) => {
 });
 
 // Role-based: check permissions
-app.delete("/api/v1/users/:id", requireRole("admin"), async (req, res) => {
+app.delete("/api/users/:id", requireRole("admin"), async (req, res) => {
   await User.delete(req.params.id);
   return res.status(204).send();
 });
@@ -359,7 +359,7 @@ Retry-After: 60
 ### URL Path Versioning (Recommended)
 
 ```
-/api/v1/users
+/api/users
 /api/v2/users
 ```
 
@@ -379,7 +379,7 @@ Accept: application/vnd.myapp.v2+json
 ### Versioning Strategy
 
 ```
-1. Start with /api/v1/ — don't version until you need to
+1. Start with /api/ — don't version until you need to
 2. Maintain at most 2 active versions (current + previous)
 3. Deprecation timeline:
    - Announce deprecation (6 months notice for public APIs)
@@ -433,7 +433,7 @@ export async function POST(req: NextRequest) {
     { data: user },
     {
       status: 201,
-      headers: { Location: `/api/v1/users/${user.id}` },
+      headers: { Location: `/api/users/${user.id}` },
     },
   );
 }
@@ -470,7 +470,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(
             {"data": UserSerializer(user).data},
             status=status.HTTP_201_CREATED,
-            headers={"Location": f"/api/v1/users/{user.id}"},
+            headers={"Location": f"/api/users/{user.id}"},
         )
 ```
 
@@ -500,7 +500,7 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    w.Header().Set("Location", fmt.Sprintf("/api/v1/users/%s", user.ID))
+    w.Header().Set("Location", fmt.Sprintf("/api/users/%s", user.ID))
     writeJSON(w, http.StatusCreated, map[string]any{"data": user})
 }
 ```

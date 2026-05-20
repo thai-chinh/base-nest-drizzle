@@ -97,14 +97,16 @@ export const loggerConfig = {
       return 'info';
     },
     // Production: chỉ log slow requests (> 1s)
+    // Note: Fastify doesn't have getResponseTime(), so we'll simplify
     customSuccessMessage: (req: any, res: any) => {
-      const responseTime = res.getResponseTime();
-      if (process.env.NODE_ENV === 'production' && responseTime < 1000) {
-        return ''; // Không log nhanh - trả về empty string thay vì undefined
+      // For Fastify, we can't easily get response time here
+      // Just log all requests in dev, minimal in prod
+      if (process.env.NODE_ENV === 'production') {
+        return ''; // Don't log successful requests in production
       }
-      return `${req.method} ${req.url} ${res.statusCode} - ${responseTime}ms`;
+      return `${req.method} ${req.url} ${res.statusCode}`;
     },
-    // Production: chỉ log errors và slow requests
+    // Production: chỉ log errors
     customErrorMessage: (req: any, res: any, err: any) => {
       return `${req.method} ${req.url} ${res.statusCode} - ${err.message}`;
     },

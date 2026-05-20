@@ -31,9 +31,9 @@ async function bootstrap() {
 
   app.useLogger(app.get(Logger));
 
-  // Global prefix — tất cả API đều có dạng /api/v1/...
+  // Global prefix — tất cả API đều có dạng /api/...
   // Exclude: /health* và /docs (Swagger UI)
-  app.setGlobalPrefix('api/v1', {
+  app.setGlobalPrefix('api', {
     exclude: ['/health', '/health/live', '/health/ready', '/docs', '/docs-json'],
   });
 
@@ -63,7 +63,6 @@ async function bootstrap() {
       .setTitle('WedTech API')
       .setDescription('Backend API documentation')
       .setVersion('1.0')
-      .addServer('/api/v1', 'API v1')
       .addBearerAuth(
         { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
         'access-token',

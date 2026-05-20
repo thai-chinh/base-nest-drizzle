@@ -148,7 +148,7 @@ this.logger.info('User data', {
 
 ### **Development format (pretty):**
 ```
-[10:30:15.123] DEBUG HTTP → GET /api/v1/users | IP: 127.0.0.1 | Agent: Chrome | ID: req-123
+[10:30:15.123] DEBUG HTTP → GET /api/users | IP: 127.0.0.1 | Agent: Chrome | ID: req-123
 ```
 
 ### **Production format (JSON):**
@@ -160,7 +160,7 @@ this.logger.info('User data', {
   "hostname": "server-1",
   "type": "HTTP_REQUEST",
   "method": "GET",
-  "url": "/api/v1/users",
+  "url": "/api/users",
   "statusCode": 200,
   "durationMs": 45,
   "requestId": "req-123",

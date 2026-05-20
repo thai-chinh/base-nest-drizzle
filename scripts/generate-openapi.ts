@@ -44,7 +44,7 @@ async function generate() {
       },
     );
 
-    app.setGlobalPrefix('api/v1', {
+    app.setGlobalPrefix('api', {
       exclude: ['/health', '/health/live', '/health/ready'],
     });
 
@@ -52,7 +52,7 @@ async function generate() {
       .setTitle('WedTech API')
       .setDescription('Backend API documentation')
       .setVersion('1.0')
-      .addServer('/api/v1', 'API v1')
+      .addServer('/api', 'API v1')
       .addBearerAuth(
         { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
         'access-token',

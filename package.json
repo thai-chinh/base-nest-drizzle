@@ -28,6 +28,10 @@
     "db:studio": "drizzle-kit studio",
     "db:drop": "drizzle-kit drop",
     "openapi:generate": "tsx scripts/generate-openapi.ts",
+    "seed:create-user": "ts-node scripts/seed.ts",
+    "seed:list-users": "ts-node scripts/seed.ts --list",
+    "migration:generate": "ts-node scripts/generate-migration.ts",
+    "migration:list": "ts-node scripts/generate-migration.ts --list",
     "prepare": "husky"
   },
   "dependencies": {

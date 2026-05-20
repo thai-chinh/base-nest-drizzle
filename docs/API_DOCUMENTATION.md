@@ -49,7 +49,7 @@ import type { paths } from './types/api';
 
 // Type-safe API calls
 async function login(email: string, password: string) {
-  const response = await fetch('/api/v1/auth/login', {
+  const response = await fetch('/api/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
@@ -102,7 +102,7 @@ make openapi
 
 ### Base URL
 ```
-http://localhost:3333/api/v1
+http://localhost:3333/api
 ```
 
 ### Authentication

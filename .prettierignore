@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Drizzle migrations
+drizzle/
+
+# Coverage
+coverage/
+
+# Cache
+.cache/
+.turbo/
+
+# IDE
+.idea/
+.vscode/
+
+# Lock files
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
